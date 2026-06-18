@@ -4,12 +4,10 @@
 // Pin Definitions
 #define CAN_CS_PIN              (10) // CAN CS pin
 #define CAN_INT_PIN             (2)  // Interrupt pin for CAN bus
-#define PRECHARGE_PRECHARGE_PIN (4)  // Output to precharge board to indicate precharge completion
-#define PRECHARGE_RTD_PIN       (5)  // Output to RTD to indicate precharge completion
+#define PRECHARGE_PRECHARGE_PIN (8)  // Output to precharge board to indicate precharge completion
 
 // Precharge Constants
 #define PRECHARGE_THRESHOLD_PRECHARGE (0.92) // Percentage to send signal to precharge board
-#define PRECHARGE_THRESHOLD_RTD       (0.97) // Percentage to send signal to RTD
 
 MCP_CAN CAN(CAN_CS_PIN);
 
@@ -43,9 +41,6 @@ void setup() {
 
   pinMode(PRECHARGE_PRECHARGE_PIN, OUTPUT);
   digitalWrite(PRECHARGE_PRECHARGE_PIN, LOW);
-
-  pinMode(PRECHARGE_RTD_PIN, OUTPUT);
-  digitalWrite(PRECHARGE_RTD_PIN, LOW);
 
   while (CAN.begin(MCP_ANY, CAN_500KBPS, MCP_16MHZ) != CAN_OK) {
     delay(100);
@@ -86,5 +81,4 @@ void loop() {
   // Precharge completion calculations
   double prechargePercentage = chargerVolt / batVolt;
   digitalWrite(PRECHARGE_PRECHARGE_PIN, (prechargePercentage > PRECHARGE_THRESHOLD_PRECHARGE) ? HIGH : LOW);
-  digitalWrite(PRECHARGE_RTD_PIN, (prechargePercentage > PRECHARGE_THRESHOLD_RTD) ? HIGH : LOW);
 }
