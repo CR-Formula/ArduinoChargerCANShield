@@ -4,8 +4,8 @@
 // Pin Definitions
 #define CAN_CS_PIN              (10) // CAN CS pin
 #define CAN_INT_PIN             (2)  // Interrupt pin for CAN bus
-#define PRECHARGE_PRECHARGE_PIN (4)  // Output to precharge board to indicate precharge completion
-#define PRECHARGE_RTD_PIN       (5)  // Output to RTD to indicate precharge completion
+#define PRECHARGE_PRECHARGE_PIN (5)  // Output to precharge board to indicate precharge completion
+#define PRECHARGE_RTD_PIN       (7)  // Output to RTD to indicate precharge completion
 
 // Precharge Constants
 #define PRECHARGE_THRESHOLD_PRECHARGE (0.92) // Percentage to send signal to precharge board
