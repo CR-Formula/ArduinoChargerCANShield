@@ -15,6 +15,9 @@ MCP_CAN CAN(CAN_CS_PIN);
 float batVolt = 0.0;
 float chargerVolt = 0.0;
 
+unsigned long lastPrint = 0;
+#define PRINT_RATE_MS (100)
+
 
 // ---- Big-endian decode helpers ----
 
@@ -37,16 +40,16 @@ int32_t parseInt32BE(unsigned char* buf, int offset) {
 // ---- Setup ----
 
 void setup() {
-  // Serial.begin(115200);
+  Serial.begin(9600);
 
   pinMode(PRECHARGE_PRECHARGE_PIN, OUTPUT);
   digitalWrite(PRECHARGE_PRECHARGE_PIN, LOW);
 
   while (CAN.begin(MCP_ANY, CAN_500KBPS, MCP_16MHZ) != CAN_OK) {
     delay(100);
-    // Serial.println("CAN Init FAILED - Check CS Pin and wiring");
+    Serial.println("CAN Init FAILED - Check CS Pin and wiring");
   }
-  // Serial.println("CAN Init OK");
+  Serial.println("CAN Init OK");
   CAN.setMode(MCP_NORMAL);
 
   pinMode(CAN_INT_PIN, INPUT_PULLUP);
@@ -81,4 +84,14 @@ void loop() {
   // Precharge completion calculations
   double prechargePercentage = chargerVolt / batVolt;
   digitalWrite(PRECHARGE_PRECHARGE_PIN, (prechargePercentage > PRECHARGE_THRESHOLD_PRECHARGE) ? HIGH : LOW);
+  
+  if (millis() - lastPrint >= PRINT_RATE_MS) {
+    lastPrint += PRINT_RATE_MS;
+    Serial.print(chargerVolt, 1);
+    Serial.print(" V    ");
+    Serial.print(batVolt, 1);
+    Serial.print(" V    ");
+    Serial.print(prechargePercentage, 2);
+    Serial.println("%");
+  }
 }
